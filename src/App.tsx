@@ -1,11 +1,9 @@
+import { Products } from "./modules/Products/views";
 
 function App() {
-
   return (
-    <>
-    <div>Advanced React Bootcamp</div>
-    </>
-  )
+    <Products/>
+  );
 }
 
-export default App
+export default App;
