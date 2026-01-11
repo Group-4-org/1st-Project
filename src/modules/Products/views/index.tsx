@@ -1,17 +1,8 @@
-import {
-  Badge,
-  Button,
-  Card,
-  Grid,
-  Group,
-  Image,
-  Pill,
-  Text,
-} from "@mantine/core";
-import { useGetAllProducts } from "../hooks/useGetAllProducts";
+import { Badge, Button, Card, Grid, Group, Image, Pill, Text } from '@mantine/core';
+import { useGetAllProducts } from '../hooks/useGetAllProducts';
 
 export const Products = () => {
-  const { products } = useGetAllProducts();
+  const { all: products } = useGetAllProducts();
 
   return (
     <Grid>
