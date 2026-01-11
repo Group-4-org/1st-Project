@@ -1,8 +1,8 @@
 import { toProduct } from "../adapters/toProduct";
 import type { Product } from "../entities/Product";
-import type { ProductsRepository } from "./ProductsRepository";
+import type { ProductsRepository } from "./ProductRepo";
 
-const Base_URL = "https://dummyjson.com/products";
+const Base_URL = "https://dummyjson.com/products?limit=150";
 
 export const restProducts = (): ProductsRepository => {
   return {
