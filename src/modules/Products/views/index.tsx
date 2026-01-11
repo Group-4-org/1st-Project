@@ -2,7 +2,9 @@ import { Badge, Button, Card, Grid, Group, Image, Pill, Text } from '@mantine/co
 import { useGetAllProducts } from '../hooks/useGetAllProducts';
 
 export const Products = () => {
-  const { all: products } = useGetAllProducts();
+  const limit = 100 ;
+  const skip = 0 ;
+  const { all: products } = useGetAllProducts(limit,skip);
 
   return (
     <Grid>

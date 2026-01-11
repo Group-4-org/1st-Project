@@ -1,5 +1,5 @@
 import type { Product } from "../entities/Product";
 
 export interface ProductsRepository {
-  getAll: () => Promise<Product[]>;
+  getAll: (skip:number,limit:number) => Promise<Product[]>;
 }
