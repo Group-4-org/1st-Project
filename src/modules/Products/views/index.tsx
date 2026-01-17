@@ -56,30 +56,38 @@ export const Products = () => {
                 style={{
                   backgroundColor: "#343a46",
                   borderColor: "#3f4551",
-                  padding:"0",
+                  padding: "0",
                 }}
               >
-                <Box style={{ borderBottom: "1px solid #3f4551" }}>
+                <Box
+                  style={{
+                    position: "relative",
+                    borderBottom: "1px solid #3f4551",
+                  }}
+                >
                   <Image src={product.image} h={140} fit="contain" />
-                </Box>
 
-                <Stack gap={6} p="md">
                   {product.isAvailable && (
                     <Box
                       style={{
-                        alignSelf: "flex-end",
+                        position: "absolute",
+                        top: 8,
+                        right: 8,
                         backgroundColor: "#00b517",
                         color: "#fff",
                         fontSize: 12,
                         fontWeight: 600,
                         padding: "2px 8px",
                         borderRadius: 10,
+                        zIndex: 10,
                       }}
                     >
                       Available
                     </Box>
                   )}
+                </Box>
 
+                <Stack gap={6} p="md">
                   <Group justify="space-between">
                     <Text
                       fw={500}
