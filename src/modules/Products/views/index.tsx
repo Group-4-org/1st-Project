@@ -1,37 +1,143 @@
-import { Badge, Button, Card, Grid, Group, Image, Pill, Text } from '@mantine/core';
-import { useGetAllProducts } from '../hooks/useGetAllProducts';
+import {
+  Box,
+  Title,
+  Button,
+  Card,
+  Grid,
+  Group,
+  Image,
+  Text,
+  Stack,
+} from "@mantine/core";
+import { useGetAllProducts } from "../hooks/useGetAllProducts";
 
 export const Products = () => {
-  const limit = 100 ;
-  const skip = 0 ;
-  const { all: products } = useGetAllProducts(limit,skip);
+  const limit = 100;
+  const skip = 0;
+  const { all: products, isLoading } = useGetAllProducts(limit, skip);
+
+  if (isLoading) {
+    return (
+      <Box
+        style={{
+          backgroundColor: "#23272f",
+          minHeight: "100vh",
+          width: "100%",
+        }}
+        p={80}
+      >
+        <Text c="#e3e8ec" ta="center">
+          Loading products...
+        </Text>
+      </Box>
+    );
+  }
 
   return (
-    <Grid>
-      {products.map((product) => {
-        return (
-          <Grid.Col span={4} key={product.id}>
-            <Card shadow="sm" padding="lg" radius="md" withBorder>
-              <Card.Section>
-                <Image src={product.image} height={160} alt={product.name} />
-              </Card.Section>
-              {product.isAvailable && <Pill>Available</Pill>}
-              <Group justify="space-between" mt="md" mb="xs">
-                <Text fw={500}>{product.name}</Text>
-                <Badge color="pink">On Sale</Badge>
-              </Group>
+    <Box
+      style={{
+        backgroundColor: "#23272f",
+        minHeight: "100vh",
+        width: "100%",
+      }}
+      p={80}
+    >
+      <Stack gap="xl">
+        <Title order={2} c="#e3e8ec" ta="center">
+          Our Products
+        </Title>
 
-              <Text size="sm" c="dimmed">
-                {product.description}
-              </Text>
+        <Grid justify="center" gutter="lg">
+          {products.map((product) => (
+            <Grid.Col key={product.id} span={{ base: 12, md: 4 }}>
+              <Card
+                withBorder
+                radius="md"
+                style={{
+                  backgroundColor: "#343a46",
+                  borderColor: "#3f4551",
+                  padding:"0",
+                }}
+              >
+                <Box style={{ borderBottom: "1px solid #3f4551" }}>
+                  <Image src={product.image} h={140} fit="contain" />
+                </Box>
 
-              <Button color="blue" fullWidth mt="md" radius="md">
-                Order Now
-              </Button>
-            </Card>
-          </Grid.Col>
-        );
-      })}
-    </Grid>
+                <Stack gap={6} p="md">
+                  {product.isAvailable && (
+                    <Box
+                      style={{
+                        alignSelf: "flex-end",
+                        backgroundColor: "#00b517",
+                        color: "#fff",
+                        fontSize: 12,
+                        fontWeight: 600,
+                        padding: "2px 8px",
+                        borderRadius: 10,
+                      }}
+                    >
+                      Available
+                    </Box>
+                  )}
+
+                  <Group justify="space-between">
+                    <Text
+                      fw={500}
+                      c="#e3e8ec"
+                      style={{
+                        maxWidth: "70%",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {product.name}
+                    </Text>
+
+                    <Text fw={600} fz="lg" c="#e3e8ec">
+                      ${product.price}
+                    </Text>
+                  </Group>
+
+                  <Text fz="sm" c="#8b96a5">
+                    {product.description}
+                  </Text>
+
+                  {product.hasDiscounts && (
+                    <Box
+                      style={{
+                        width: "100%",
+                        backgroundColor: "rgba(255, 179, 0, 0.6)",
+                        color: "#000",
+                        fontWeight: 600,
+                        textAlign: "center",
+                        padding: "4px 0",
+                        fontSize: 12,
+                        borderRadius: 4,
+                      }}
+                    >
+                      On Sale
+                    </Box>
+                  )}
+                </Stack>
+
+                <Group justify="flex-end" p="md">
+                  <Button
+                    size="sm"
+                    style={{
+                      backgroundColor: "#0D6EFD",
+                      color: "#e3e8ec",
+                      fontWeight: 600,
+                    }}
+                  >
+                    Order Now
+                  </Button>
+                </Group>
+              </Card>
+            </Grid.Col>
+          ))}
+        </Grid>
+      </Stack>
+    </Box>
   );
 };
