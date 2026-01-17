@@ -57,6 +57,7 @@ export const Products = () => {
                   backgroundColor: "#343a46",
                   borderColor: "#3f4551",
                   padding: "0",
+                  boxShadow: "3px 2px 12px rgba(154, 154, 154, 0.204)", 
                 }}
               >
                 <Box
@@ -65,14 +66,14 @@ export const Products = () => {
                     borderBottom: "1px solid #3f4551",
                   }}
                 >
-                  <Image src={product.image} h={140} fit="contain" />
+                  <Image src={product.image} h={166} fit="contain" />
 
                   {product.isAvailable && (
                     <Box
                       style={{
                         position: "absolute",
-                        top: 8,
-                        right: 8,
+                        top: 15,
+                        right: 10,
                         backgroundColor: "#00b517",
                         color: "#fff",
                         fontSize: 12,
