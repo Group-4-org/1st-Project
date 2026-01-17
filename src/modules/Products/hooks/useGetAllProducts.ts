@@ -7,12 +7,12 @@ type SelectQueryData = {
   productsWithDiscountHigherThan10: Product[];
   productsWithDiscountLowerThan10: Product[];
   productsWithHighRating: Product[];
-  productsfurniture : Product[];
+  productsfurniture: Product[];
 };
 
 const Get_ALL_PRODUCTS_QUERY_KEY = 'products';
 
-export const useGetAllProducts = (limit:number,skip:number) => {
+export const useGetAllProducts = (limit: number, skip: number) => {
   const { getAll } = useProducts();
   const {
     data = {
@@ -20,25 +20,25 @@ export const useGetAllProducts = (limit:number,skip:number) => {
       productsWithDiscountHigherThan10: [],
       productsWithDiscountLowerThan10: [],
       productsWithHighRating: [],
-      productsfurniture : [],
+      productsfurniture: [],
     },
     error,
     isLoading,
   } = useQuery({
     queryKey: [Get_ALL_PRODUCTS_QUERY_KEY],
-    queryFn: () => getAll(limit,skip),
+    queryFn: () => getAll(limit, skip),
     staleTime: 1000 * 60,
     select: (data: Product[]): SelectQueryData => {
       return {
         all: data,
         productsWithDiscountHigherThan10: data.filter(
-          (product) => product.hasDiscounts && product.discountPercentage > 10
+          (product) =>  product.discountPercentage > 10
         ),
         productsWithDiscountLowerThan10: data.filter(
-          (product) => product.hasDiscounts && product.discountPercentage <= 10
+          (product) =>  product.discountPercentage <= 10
         ),
         productsWithHighRating: data.filter((product) => product.rating > 4),
-        productsfurniture : data.filter((product) => product.category === 'furniture'),
+        productsfurniture: data.filter((product) => product.category === 'furniture'),
       };
     },
   });
@@ -47,7 +47,7 @@ export const useGetAllProducts = (limit:number,skip:number) => {
     productsWithDiscountHigherThan10: data.productsWithDiscountHigherThan10,
     productsWithDiscountLowerThan10: data.productsWithDiscountLowerThan10,
     productsWithHighRating: data.productsWithHighRating,
-    productsfurniture : data.productsfurniture,
+    productsfurniture: data.productsfurniture,
     all: data.all,
     isEmpty: error,
     isLoading,
