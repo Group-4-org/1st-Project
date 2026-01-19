@@ -29,3 +29,7 @@ export const toProduct = (products: ProductDto[]): Product[] => {
     };
   });
 };
+
+export const toSingleProduct = (product: ProductDto): Product => {
+  return toProduct([product])[0];
+};
