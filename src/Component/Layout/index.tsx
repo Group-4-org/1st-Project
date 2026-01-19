@@ -7,9 +7,8 @@ export default function Layout() {
   return (
     <Box
       style={{
-        backgroundColor: '#23272f',
         minHeight: '100vh',
-        width: '100vw',
+        width: '100%',
       }}
       p={20}
     >
