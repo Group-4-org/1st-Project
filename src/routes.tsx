@@ -1,0 +1,22 @@
+import { createRootRoute, createRoute, Navigate } from '@tanstack/react-router';
+import Layout from './Component/Layout';
+import { Products } from './modules/Products/views/ProductPage';
+
+const rootRoute = createRootRoute({
+  component: Layout,
+  notFoundComponent: () => <Navigate to="/" />,
+});
+
+export const productsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/',
+  component: Products,
+});
+
+export const productRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/product/$id',
+  component: () => <h1>Product Detail</h1>,
+});
+
+export const routeTree = rootRoute.addChildren([productsRoute, productRoute]);
