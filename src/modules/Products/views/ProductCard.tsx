@@ -8,7 +8,7 @@ export default function ProductCard({ product }: { product: Product }) {
     <Grid.Col
       key={product.id}
       span={{ base: 12, md: 4 }}
-      onClick={() => navigator({ to: `/product`, state: { product } })}
+      onClick={() => navigator({ to: `/product/${product.id}`, state: { product } })}
     >
       <Card
         withBorder
