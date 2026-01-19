@@ -1,4 +1,4 @@
-import { toProduct } from '../adapters/toProduct';
+import { toProduct, toSingleProduct } from '../adapters/toProduct';
 import type { Product } from '../entities/Product';
 import type { ProductsRepository } from './ProductRepo';
 
@@ -17,7 +17,8 @@ export const restProducts = (): ProductsRepository => {
     async getById(id: number | string): Promise<Product> {
       const res = await fetch(`${Base_URL}/${id}`);
       if (!res.ok) throw new Error("Failed to fetch product");
-      return res.json();
+      const data = await res.json();
+      return toSingleProduct(data);
     },
   };
 };
