@@ -1,6 +1,6 @@
 import { Box, Button, Card, Grid, Group, Image, Stack, Text } from '@mantine/core';
-import type { Product } from '../entities/Product';
 import { useNavigate } from '@tanstack/react-router';
+import type { Product } from '../entities/Product';
 
 export default function ProductCard({ product }: { product: Product }) {
   const navigator = useNavigate();
@@ -8,7 +8,7 @@ export default function ProductCard({ product }: { product: Product }) {
     <Grid.Col
       key={product.id}
       span={{ base: 12, md: 4 }}
-      onClick={() => navigator({ to: `/product/${product.id}` })}
+      onClick={() => navigator({ to: `/product`, state: { product } })}
     >
       <Card
         withBorder
