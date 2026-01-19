@@ -13,5 +13,12 @@ export const restProducts = (): ProductsRepository => {
       }
       return response.json().then((data) => toProduct(data.products));
     },
+
+    async getById(id: number | string): Promise<Product> {
+      const res = await fetch(`${Base_URL}/${id}`);
+      if (!res.ok) throw new Error("Failed to fetch product");
+      console.log(res.json());
+      return res.json();
+    },
   };
 };
