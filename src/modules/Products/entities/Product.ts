@@ -5,9 +5,10 @@ export type Product = {
   category: string;
   price: number;
   image: string;
+  images: string[];
   isAvailable: boolean;
   hasDiscounts: boolean;
-  rating:number;
+  rating: number;
   tags: string[];
   discountPercentage: number;
   reviews: Review[];
