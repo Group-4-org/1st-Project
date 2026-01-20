@@ -17,6 +17,7 @@ import { ProductsSection } from "./components/ProductsSection";
 import { ProductsSidebar } from "./components/ProductsSidebar";
 
 import { filterAndSort, type FilterOptions } from "../utils/filterAndSort";
+import { useFilteredProducts } from "../hooks/useFilteredProducts";
 
 const PRICE_MIN = 0;
 const PRICE_MAX = 3000;
@@ -40,18 +41,12 @@ export const Products = () => {
     priceRange: [PRICE_MIN, PRICE_MAX],
   });
 
-  const filtered = useMemo(() => {
-    return {
-      all: filterAndSort(all ?? [], options),
-      high: filterAndSort(productsWithDiscountHigherThan10 ?? [], options),
-      low: filterAndSort(productsWithDiscountLowerThan10 ?? [], options),
-    };
-  }, [
-    all,
-    productsWithDiscountHigherThan10,
-    productsWithDiscountLowerThan10,
+  const filtered = useFilteredProducts(
+    all ?? [],
+    productsWithDiscountHigherThan10 ?? [],
+    productsWithDiscountLowerThan10 ?? [],
     options,
-  ]);
+  );
 
   if (isLoading) return <ProductsLoading />;
 
