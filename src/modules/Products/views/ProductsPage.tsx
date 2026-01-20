@@ -1,65 +1,106 @@
-import { Box, Title, Grid, Text, Stack } from '@mantine/core';
-import { useGetAllProducts } from '../hooks/useGetAllProducts';
-import ProductCard from './ProductCard';
+import {
+  AppShell,
+  Burger,
+  Container,
+  Divider,
+  Group,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { useMemo, useState } from "react";
+import { useGetAllProducts } from "../hooks/useGetAllProducts";
+
+import { ProductsLoading } from "./components/ProductsLoading";
+import { ProductsSection } from "./components/ProductsSection";
+import { ProductsSidebar } from "./components/ProductsSidebar";
+
+import { filterAndSort, type FilterOptions } from "../utils/filterAndSort";
+import { useFilteredProducts } from "../hooks/useFilteredProducts";
+
+const PRICE_MIN = 0;
+const PRICE_MAX = 3000;
 
 export const Products = () => {
   const limit = 20;
   const skip = 0;
+
   const {
-    all: products,
+    all,
     productsWithDiscountHigherThan10,
     productsWithDiscountLowerThan10,
     isLoading,
   } = useGetAllProducts(limit, skip);
 
-  if (isLoading) {
-    return (
-      <Box
-        style={{
-          backgroundColor: '#23272f',
-          minHeight: '100vh',
-          width: '100%',
-        }}
-        p={80}
-      >
-        <Text c="#e3e8ec" ta="center">
-          Loading products...
-        </Text>
-      </Box>
-    );
-  }
+  const [opened, { toggle }] = useDisclosure(false);
+
+  const [options, setOptions] = useState<FilterOptions>({
+    sort: "featured",
+    onlyAvailable: false,
+    priceRange: [PRICE_MIN, PRICE_MAX],
+  });
+
+  const filtered = useFilteredProducts(
+    all ?? [],
+    productsWithDiscountHigherThan10 ?? [],
+    productsWithDiscountLowerThan10 ?? [],
+    options,
+  );
+
+  if (isLoading) return <ProductsLoading />;
 
   return (
-   
-      <Stack gap="xl">
-        <Title order={2} c="#e3e8ec" ta="center">
-          Our Products
-        </Title>
+    <AppShell
+      navbar={{ width: 300, breakpoint: "sm", collapsed: { mobile: !opened } }}
+      padding="md"
+      styles={{
+        main: {
+          background: "linear-gradient(180deg, #f8f9fa, #ffffff)",
+          minHeight: "100vh",
+        },
+      }}
+    >
+      <AppShell.Navbar>
+        <ProductsSidebar
+          opened={opened}
+          toggle={toggle}
+          options={options}
+          setOptions={setOptions}
+          priceMin={PRICE_MIN}
+          priceMax={PRICE_MAX}
+        />
+      </AppShell.Navbar>
 
-        <Grid justify="center" gutter="lg">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </Grid>
-       
-        <Title order={2} c="#e3e8ec" ta="center">
-          Products with discounts higher than 10%
-        </Title>
+      <AppShell.Main>
+        <Container size="lg">
+          <Stack gap="xl" py={24}>
+            <Group justify="space-between" align="center">
+              <Stack gap={4}>
+                <Title order={2}>Our Products</Title>
+                <Text c="dimmed">
+                  Browse all items and check the best deals.
+                </Text>
+              </Stack>
+              <Burger hiddenFrom="sm" opened={opened} onClick={toggle} />
+            </Group>
 
-        <Grid justify="center" gutter="lg">
-          {productsWithDiscountHigherThan10.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </Grid>
-        <Title order={2} c="#e3e8ec" ta="center">
-          Products with discounts lower than 10%
-        </Title>
+            <ProductsSection title="All Products" items={filtered.all} />
 
-        <Grid justify="center" gutter="lg">
-          {productsWithDiscountLowerThan10.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </Grid>
-      </Stack>
+            <Divider />
+
+            <ProductsSection
+              title="Discounts higher than 10%"
+              items={filtered.high}
+            />
+
+            <ProductsSection
+              title="Discounts lower than 10%"
+              items={filtered.low}
+            />
+          </Stack>
+        </Container>
+      </AppShell.Main>
+    </AppShell>
   );
 };
