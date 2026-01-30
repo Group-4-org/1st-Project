@@ -16,6 +16,7 @@ import {
   Title,
 } from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
+import { ProductReviews } from "./components/ProductReviews";
 
 export function ProductDetail() {
   const { id } = useParams({
@@ -120,6 +121,10 @@ export function ProductDetail() {
           </Grid.Col>
         </Grid>
       </Card>
+      <Space h="md" />
+      {product.reviews && product.reviews.length > 0 && (
+        <ProductReviews reviews={product.reviews} />
+      )}
     </Container>
   );
 }
