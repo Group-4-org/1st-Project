@@ -8,12 +8,23 @@ import {
   Stack,
   Text,
   Badge,
+  ActionIcon,
 } from "@mantine/core";
+import { FaTrash } from "react-icons/fa";
 import { useNavigate } from "@tanstack/react-router";
 import type { Product } from "../entities/Product";
+import { useDeleteProductById } from "../hooks/useDeleteProduct";
 
 export default function ProductCard({ product }: { product: Product }) {
   const navigate = useNavigate();
+const { mutate: deleteProduct, isPending } = useDeleteProductById();
+
+const handleDelete = (e: React.MouseEvent) => {
+  e.stopPropagation(); 
+  console.log("delete start")
+  deleteProduct(product.id);
+};
+
 
   return (
     <Grid.Col span={{ base: 12, md: 4 }}>
@@ -52,15 +63,27 @@ export default function ProductCard({ product }: { product: Product }) {
               color="green"
               variant="filled"
               size="sm"
-              style={{
-                position: "absolute",
-                top: 10,
-                right: 10,
-              }}
+              style={{ position: "absolute", top: 10, left: 10 }}
             >
               Available
             </Badge>
           )}
+
+          {/* Delete Icon */}
+          <ActionIcon
+            color="red"
+            variant="light"
+            size="sm"
+            loading={isPending}
+            onClick={handleDelete}
+            style={{
+              position: "absolute",
+              top: 10,
+              right: 10,
+            }}
+          >
+            <FaTrash size={16} />
+          </ActionIcon>
         </Card.Section>
 
         {/* Content */}
