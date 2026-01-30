@@ -5,6 +5,7 @@ export type ProductDto = {
   category: string;
   price: number;
   thumbnail: string;
+  images: string[];
   stock: number;
   discountPercentage: number;
   rating: number;
