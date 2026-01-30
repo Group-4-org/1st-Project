@@ -1,46 +1,62 @@
 import type { Product } from "../entities/Product";
 
 export type SortKey =
-    | "featured"
-    | "price-asc"
-    | "price-desc"
-    | "name-asc"
-    | "name-desc";
+  | "featured"
+  | "price-asc"
+  | "price-desc"
+  | "name-asc"
+  | "name-desc"
+  | "rating"
+  | "discount";
 
 export type FilterOptions = {
-    sort: SortKey;
-    onlyAvailable: boolean;
-    priceRange: [number, number];
+  sort: SortKey;
+  onlyAvailable: boolean;
+  priceRange: [number, number];
 };
 
-export function filterAndSort(items: Product[], opts: FilterOptions): Product[] {
-    const filtered = items.filter((p) => {
-        if (opts.onlyAvailable && !p.isAvailable) return false;
+export function filterAndSort(
+  items: Product[],
+  opts: FilterOptions,
+): Product[] {
+  const [minPrice, maxPrice] = opts.priceRange;
 
-        const price = Number(p.price);
-        if (!Number.isNaN(price)) {
-            if (price < opts.priceRange[0] || price > opts.priceRange[1]) return false;
-        }
-        return true;
-    });
+  const filtered = items.filter((p) => {
+    if (opts.onlyAvailable && !p.isAvailable) return false;
 
-    if (opts.sort === "featured") return filtered;
+    const price = Number(p.price ?? 0);
+    if (price < minPrice || price > maxPrice) return false;
 
-    return filtered.sort((a, b) => {
-        const pa = Number(a.price);
-        const pb = Number(b.price);
+    return true;
+  });
 
-        switch (opts.sort) {
-            case "price-asc":
-                return (Number.isNaN(pa) ? 0 : pa) - (Number.isNaN(pb) ? 0 : pb);
-            case "price-desc":
-                return (Number.isNaN(pb) ? 0 : pb) - (Number.isNaN(pa) ? 0 : pa);
-            case "name-asc":
-                return a.name.localeCompare(b.name);
-            case "name-desc":
-                return b.name.localeCompare(a.name);
-            default:
-                return 0;
-        }
-    });
+  if (opts.sort === "featured") return filtered;
+
+  return [...filtered].sort((a, b) => {
+    switch (opts.sort) {
+      case "price-asc":
+        return Number(a.price ?? 0) - Number(b.price ?? 0);
+
+      case "price-desc":
+        return Number(b.price ?? 0) - Number(a.price ?? 0);
+
+      case "name-asc":
+        return a.name.localeCompare(b.name);
+
+      case "name-desc":
+        return b.name.localeCompare(a.name);
+
+      case "rating":
+        return Number(b.rating ?? 0) - Number(a.rating ?? 0);
+
+      case "discount":
+        return (
+          Number(b.discountPercentage ?? 0) -
+          Number(a.discountPercentage ?? 0)
+        );
+
+      default:
+        return 0;
+    }
+  });
 }

@@ -16,8 +16,8 @@ const SORT_OPTIONS: Array<{ value: SortKey; label: string }> = [
   { value: "featured", label: "Featured" },
   { value: "price-asc", label: "Price: Low → High" },
   { value: "price-desc", label: "Price: High → Low" },
-  { value: "name-asc", label: "Name: A → Z" },
-  { value: "name-desc", label: "Name: Z → A" },
+  { value: "rating", label: "Rating: High → Low" },
+  { value: "discount", label: "Biggest Discount" },
 ];
 
 type Props = {
@@ -47,22 +47,25 @@ export function ProductsSidebar({
       <Select
         label="Sort by"
         value={options.sort}
-        onChange={(v) =>
+        data={SORT_OPTIONS}
+        onChange={(value) => {
+          if (!value) return;
           setOptions((prev) => ({
             ...prev,
-            sort: (v as SortKey) ?? "featured",
-          }))
-        }
-        data={SORT_OPTIONS}
+            sort: value,
+          }));
+        }}
       />
 
       <Switch
         label="Only available"
         checked={options.onlyAvailable}
-        onChange={(event) => {
-          const checked = event.currentTarget.checked;
-          setOptions((prev) => ({ ...prev, onlyAvailable: checked }));
-        }}
+        onChange={(event) =>
+          setOptions((prev) => ({
+            ...prev,
+            onlyAvailable: event.currentTarget.checked,
+          }))
+        }
       />
 
       <Box>
@@ -75,7 +78,10 @@ export function ProductsSidebar({
           max={priceMax}
           value={options.priceRange}
           onChange={(range) =>
-            setOptions((prev) => ({ ...prev, priceRange: range }))
+            setOptions((prev) => ({
+              ...prev,
+              priceRange: range,
+            }))
           }
         />
 
@@ -94,7 +100,7 @@ export function ProductsSidebar({
           })
         }
       >
-        Reset
+        Reset filters
       </Button>
     </Stack>
   );
