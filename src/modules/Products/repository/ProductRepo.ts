@@ -1,6 +1,7 @@
 import type { Product } from "../entities/Product";
 
 export interface ProductsRepository {
-  getAll: (skip:number,limit:number) => Promise<Product[]>;
+  getAll: (skip: number, limit: number) => Promise<Product[]>;
   getById: (id: number | string) => Promise<Product>;
+  deleteById: (id: number | string) => Promise<void>;
 }
