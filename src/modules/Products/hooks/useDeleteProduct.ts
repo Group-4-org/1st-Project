@@ -1,6 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useProducts } from "..";
 import type { Product } from "../entities/Product";
+import { GET_PRODUCTS_BY_CATEGORY_QUERY_KEY } from "./useGetProductsByCategory";
+
+export const DELETED_PRODUCT_IDS_KEY = ["deletedProductIds"];
 
 export const useDeleteProductById = () => {
   const { deleteById } = useProducts();
@@ -10,25 +13,36 @@ export const useDeleteProductById = () => {
     mutationFn: (id: number | string) => deleteById(id),
 
     onMutate: async (id) => {
-      await queryClient.cancelQueries({ queryKey: ["products"] });
+      const numericId = Number(id);
 
-      const previousProducts = queryClient.getQueryData<Product[]>([
-        "products",
-      ]);
+      queryClient.setQueryData<number[]>(DELETED_PRODUCT_IDS_KEY, (old) => {
+        const prev = old ?? [];
+        return prev.includes(numericId) ? prev : [...prev, numericId];
+      });
 
-      queryClient.setQueryData<Product[]>(["products"], (old) =>
-        old?.filter((p) => p.id !== id),
+      await queryClient.cancelQueries({ queryKey: [GET_PRODUCTS_BY_CATEGORY_QUERY_KEY] });
+
+      const previous = queryClient.getQueriesData<Product[]>({
+        queryKey: [GET_PRODUCTS_BY_CATEGORY_QUERY_KEY],
+      });
+
+      queryClient.setQueriesData<Product[]>(
+        { queryKey: [GET_PRODUCTS_BY_CATEGORY_QUERY_KEY] },
+        (old) => (old ?? []).filter((p) => Number(p.id) !== numericId)
       );
 
-      return { previousProducts };
+      return { previous };
     },
 
     onError: (_err, _id, context) => {
-      queryClient.setQueryData(["products"], context?.previousProducts);
+      context?.previous?.forEach(([key, data]) => {
+        queryClient.setQueryData(key, data);
+      });
+
     },
 
     onSuccess: () => {
-      console.log("Product deleted successfully");
+      console.log("Deleted locally");
     },
   });
 };

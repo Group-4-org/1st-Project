@@ -31,7 +31,7 @@ export default function ProductCard({ product }: { product: Product }) {
         withBorder
         radius="lg"
         shadow="sm"
-        h={380} 
+        h={380}
         display="flex"
         onClick={() =>
           navigate({ to: `/product/${product.id}`, state: { product } })
@@ -57,12 +57,7 @@ export default function ProductCard({ product }: { product: Product }) {
             position: "relative",
           }}
         >
-          <Image
-            src={product.image}
-            h={170}
-            fit="contain"
-            alt={product.name}
-          />
+          <Image src={product.image} h={170} fit="contain" alt={product.name} />
 
           {product.isAvailable && (
             <Badge
@@ -79,18 +74,19 @@ export default function ProductCard({ product }: { product: Product }) {
             <div
               style={{
                 position: "absolute",
-                bottom: 0,
-                left:0,
+                bottom: 15,
+                right: -25,
                 background: "#dda925",
                 color: "white",
                 padding: "6px 48px",
-                width:"100%",
                 fontSize: 12,
                 fontWeight: 700,
                 letterSpacing: 1,
+                zIndex:10,
+                transform: "rotate(-35deg)",
                 boxShadow: "0 4px 10px rgba(146, 137, 137, 0.2)",
                 textTransform: "uppercase",
-                textAlign:"center"
+                textAlign: "center",
               }}
             >
               SALE
@@ -109,7 +105,7 @@ export default function ProductCard({ product }: { product: Product }) {
           </ActionIcon>
         </Card.Section>
 
-        <Stack gap={8} mt="md" style={{ flex: 1 }}>
+        <Stack gap={8} mt="md" style={{ flex: 1, zIndex: 100 }}>
           <Group justify="space-between" align="start">
             <Text fw={600} size="md" lineClamp={1}>
               {product.name}

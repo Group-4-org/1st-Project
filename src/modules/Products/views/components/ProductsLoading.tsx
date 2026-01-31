@@ -5,6 +5,7 @@ export function ProductsLoading() {
     <Box
       style={{
         minHeight: "100vh",
+        width:"90vw",
         background: "linear-gradient(180deg, #f8f9fa, #ffffff)",
         display: "flex",
         alignItems: "center",
