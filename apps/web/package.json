@@ -20,7 +20,8 @@
     "react-dom": "catalog:",
     "@mantine/carousel": "catalog:",
     "embla-carousel": "catalog:",
-    "embla-carousel-react": "catalog:"
+    "embla-carousel-react": "catalog:",
+    "react-icons": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:",
