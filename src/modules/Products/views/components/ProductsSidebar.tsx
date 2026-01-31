@@ -11,11 +11,14 @@ import {
   Title,
 } from "@mantine/core";
 import type { FilterOptions, SortKey } from "../../utils/filterAndSort";
+import type { Category } from "../../types/Category";
 
 const SORT_OPTIONS: Array<{ value: SortKey; label: string }> = [
   { value: "featured", label: "Featured" },
   { value: "price-asc", label: "Price: Low → High" },
   { value: "price-desc", label: "Price: High → Low" },
+  { value: "name-asc", label: "Name: A → Z" },
+  { value: "name-desc", label: "Name: Z → A" },
   { value: "rating", label: "Rating: High → Low" },
   { value: "discount", label: "Biggest Discount" },
 ];
@@ -27,6 +30,9 @@ type Props = {
   setOptions: React.Dispatch<React.SetStateAction<FilterOptions>>;
   priceMin: number;
   priceMax: number;
+  categories: Category[];
+  selectedCategory: string | null;
+  setSelectedCategory: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 export function ProductsSidebar({
@@ -36,13 +42,34 @@ export function ProductsSidebar({
   setOptions,
   priceMin,
   priceMax,
+  categories,
+  selectedCategory,
+  setSelectedCategory,
 }: Props) {
+  const categoryOptions = [
+    { value: "all", label: "All Categories" },
+    ...categories.map((cat) => ({
+      value: cat.slug,
+      label: cat.name,
+    })),
+  ];
+
   return (
-    <Stack gap="md" p="md">
+    <Stack gap="md" p="md" style={{ height: "100%" }}>
       <Group justify="space-between" align="center">
         <Title order={4}>Sort & Filter</Title>
         <Burger hiddenFrom="sm" opened={opened} onClick={toggle} size="sm" />
       </Group>
+
+      <Select
+        label="Category"
+        value={selectedCategory ?? "all"}
+        placeholder="All Categories"
+        data={categoryOptions}
+        onChange={(value) =>
+          setSelectedCategory(!value || value === "all" ? null : value)
+        }
+      />
 
       <Select
         label="Sort by"
@@ -50,10 +77,7 @@ export function ProductsSidebar({
         data={SORT_OPTIONS}
         onChange={(value) => {
           if (!value) return;
-          setOptions((prev) => ({
-            ...prev,
-            sort: value,
-          }));
+          setOptions((prev) => ({ ...prev, sort: value }));
         }}
       />
 
@@ -72,19 +96,14 @@ export function ProductsSidebar({
         <Text size="sm" fw={500} mb={6}>
           Price range
         </Text>
-
         <RangeSlider
           min={priceMin}
           max={priceMax}
           value={options.priceRange}
           onChange={(range) =>
-            setOptions((prev) => ({
-              ...prev,
-              priceRange: range,
-            }))
+            setOptions((prev) => ({ ...prev, priceRange: range }))
           }
         />
-
         <Text size="xs" c="dimmed" mt={6}>
           ${options.priceRange[0]} — ${options.priceRange[1]}
         </Text>
@@ -92,13 +111,14 @@ export function ProductsSidebar({
 
       <Button
         variant="light"
-        onClick={() =>
+        onClick={() => {
           setOptions({
             sort: "featured",
             onlyAvailable: false,
             priceRange: [priceMin, priceMax],
-          })
-        }
+          });
+          setSelectedCategory(null);
+        }}
       >
         Reset filters
       </Button>

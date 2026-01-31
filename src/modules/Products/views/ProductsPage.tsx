@@ -1,33 +1,20 @@
-import {
-  AppShell,
-  Burger,
-  Container,
-  Divider,
-  Group,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
+import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
-import { useMemo, useState } from "react";
+import { AppShell, Burger, Container, Group, Stack, Text, Title } from "@mantine/core";
 
-import { useGetAllProducts } from "../hooks/useGetAllProducts";
-import { ProductsLoading } from "./components/ProductsLoading";
-import { ProductsSection } from "./components/ProductsSection";
 import { ProductsSidebar } from "./components/ProductsSidebar";
+import { ProductsSection } from "./components/ProductsSection";
+import { ProductsLoading } from "./components/ProductsLoading";
 
-import type { Product } from "../entities/Product";
+import { useGetCategories } from "../hooks/useGetCategories";
+import { useGetProductsByCategory } from "../hooks/useGetProductsByCategory";
+
 import type { FilterOptions } from "../utils/filterAndSort";
 
 const PRICE_MIN = 0;
 const PRICE_MAX = 3000;
 
 export const Products = () => {
-  const limit = 200;
-  const skip = 0;
-
-  const { all, isLoading } = useGetAllProducts(limit, skip);
-
   const [opened, { toggle }] = useDisclosure(false);
 
   const [options, setOptions] = useState<FilterOptions>({
@@ -36,61 +23,23 @@ export const Products = () => {
     priceRange: [PRICE_MIN, PRICE_MAX],
   });
 
-  const filteredProducts = useMemo(() => {
-    const products = (all ?? []) as Product[];
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-    const afterAvailability = options.onlyAvailable
-      ? products.filter((p) => p.isAvailable)
-      : products;
+  const { categories, isLoading: categoriesLoading } = useGetCategories();
 
-    const [minPrice, maxPrice] = options.priceRange ?? [PRICE_MIN, PRICE_MAX];
-    const afterPrice = afterAvailability.filter((p) => {
-      const price = Number(p.price ?? 0);
-      return price >= minPrice && price <= maxPrice;
-    });
+  const { products, isLoading: productsLoading } = useGetProductsByCategory({
+    category: selectedCategory, 
+    options,
+  });
 
-    const sorted = [...afterPrice];
+  const selectedCategoryName = selectedCategory
+    ? categories.find((c) => c.slug === selectedCategory)?.name ?? selectedCategory
+    : "All Products";
 
-    switch (options.sort) {
-      case "price-asc":
-        sorted.sort((a, b) => Number(a.price) - Number(b.price));
-        break;
+  console.log("categories:", categories);
+  console.log("selectedCategory:", selectedCategory);
 
-      case "price-desc":
-        sorted.sort((a, b) => Number(b.price) - Number(a.price));
-        break;
-
-      case "rating":
-        sorted.sort((a, b) => Number(b.rating ?? 0) - Number(a.rating ?? 0));
-        break;
-
-      case "discount":
-        sorted.sort(
-          (a, b) =>
-            Number(b.discountPercentage ?? 0) - Number(a.discountPercentage ?? 0),
-        );
-        break;
-
-      default:
-        break;
-    }
-
-    return sorted;
-  }, [all, options]);
-
-  const productsByCategory = useMemo(() => {
-    const map = new Map<string, Product[]>();
-
-    for (const p of filteredProducts) {
-      const category = (p.category || "Uncategorized").toString();
-      if (!map.has(category)) map.set(category, []);
-      map.get(category)!.push(p);
-    }
-
-    return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b));
-  }, [filteredProducts]);
-
-  if (isLoading) return <ProductsLoading />;
+  if (categoriesLoading || productsLoading) return <ProductsLoading />;
 
   return (
     <AppShell
@@ -111,6 +60,9 @@ export const Products = () => {
           setOptions={setOptions}
           priceMin={PRICE_MIN}
           priceMax={PRICE_MAX}
+          categories={categories}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
         />
       </AppShell.Navbar>
 
@@ -121,26 +73,17 @@ export const Products = () => {
               <Stack gap={4}>
                 <Title order={2}>Our Products</Title>
                 <Text c="dimmed">
-                  Browse all items and explore categories. Sale label appears on
-                  the card if discount is higher than 10%.
+                  Browse all items and explore categories. Sale label appears on the card if
+                  discount is higher than 10%.
                 </Text>
               </Stack>
               <Burger hiddenFrom="sm" opened={opened} onClick={toggle} />
             </Group>
 
-            <ProductsSection title="All Products" items={filteredProducts} />
-
-            <Divider />
-
-            {productsByCategory.length === 0 ? (
+            {products.length === 0 ? (
               <Text c="dimmed">No products match your filters.</Text>
             ) : (
-              productsByCategory.map(([category, items]) => (
-                <Stack key={category} gap="md">
-                  <ProductsSection title={category} items={items} />
-                  <Divider />
-                </Stack>
-              ))
+              <ProductsSection title={selectedCategoryName} items={products} />
             )}
           </Stack>
         </Container>
