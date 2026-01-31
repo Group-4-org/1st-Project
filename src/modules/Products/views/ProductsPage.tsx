@@ -128,7 +128,7 @@ export const Products = () => {
               <Burger hiddenFrom="sm" opened={opened} onClick={toggle} />
             </Group>
 
-            <ProductsSection title="All Products" items={filteredProducts} />
+            <ProductsSection title="All Products" items={filteredProducts.slice(0, 10)} />
 
             <Divider />
 
