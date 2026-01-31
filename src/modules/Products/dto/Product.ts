@@ -20,9 +20,3 @@ export type ReviewDto = {
   reviewerName: string;
   reviewerEmail: string;
 };
-
-export type Category = {
-  name: string;
-  slug: string;
-  url: string;
-};

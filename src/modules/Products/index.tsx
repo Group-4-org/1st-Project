@@ -39,7 +39,7 @@ export const createProductsModule = () => {
 };
 
 export interface ProductsRepository {
-  getAll: (limit: number, skip: number) => Promise<Product[]>;
+  getAll: (skip: number, limit: number) => Promise<Product[]>;
   getByCategory: (
     category: string,
     options?: FilterOptions,

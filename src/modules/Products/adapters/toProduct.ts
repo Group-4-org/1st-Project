@@ -3,7 +3,6 @@ import type { Product } from "../entities/Product";
 
 export const toProduct = (products: ProductDto[]): Product[] => {
   return products.map((product) => {
-    console.log("product is ", product);
     return {
       id: product.id,
       name: product.title,

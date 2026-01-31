@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useProducts } from "..";
-import type { Category } from "../dto/Product";
+import type { Category } from "../entities/Category";
 
 export const GET_CATEGORIES_QUERY_KEY = "categories";
 
@@ -16,11 +16,9 @@ export const useGetCategories = () => {
   const categories = data ?? [];
 
   return {
-    categories,                         
+    categories,
     isEmpty: !isLoading && categories.length === 0,
     isLoading,
     error,
   };
 };
-
-useGetCategories.queryKey = GET_CATEGORIES_QUERY_KEY;

@@ -12,6 +12,7 @@ import {
   SimpleGrid,
   Skeleton,
   Space,
+  Stack,
   Text,
   Title,
 } from "@mantine/core";
@@ -69,9 +70,6 @@ export function ProductDetail() {
           <Grid.Col span={{ base: 12, md: 6 }}>
             <Group justify="between">
               <Title order={1}>{product.name}</Title>
-              <Badge color="pink" variant="light">
-                On Sale
-              </Badge>
             </Group>
             <Text c="dimmed" size="sm" mt="sm">
               {product.category}
@@ -123,7 +121,9 @@ export function ProductDetail() {
       </Card>
       <Space h="md" />
       {product.reviews && product.reviews.length > 0 && (
-        <ProductReviews reviews={product.reviews} />
+        <Stack gap="md">
+          <ProductReviews reviews={product.reviews} />
+        </Stack>
       )}
     </Container>
   );

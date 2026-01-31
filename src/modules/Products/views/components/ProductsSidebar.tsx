@@ -11,7 +11,7 @@ import {
   Title,
 } from "@mantine/core";
 import type { FilterOptions, SortKey } from "../../utils/filterAndSort";
-import type { Category } from "../../types/Category";
+import type { Category } from "../../entities/Category";
 
 const SORT_OPTIONS: Array<{ value: SortKey; label: string }> = [
   { value: "featured", label: "Featured" },

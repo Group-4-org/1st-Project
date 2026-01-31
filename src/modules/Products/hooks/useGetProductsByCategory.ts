@@ -15,7 +15,8 @@ export const useGetProductsByCategory = ({ category, options }: Params) => {
   const { getByCategory, getAll } = useProducts();
   const queryClient = useQueryClient();
 
-  const deletedIds = (queryClient.getQueryData<number[]>(DELETED_PRODUCT_IDS_KEY) ?? []);
+  const deletedIds =
+    queryClient.getQueryData<number[]>(DELETED_PRODUCT_IDS_KEY) ?? [];
 
   const query = useQuery<Product[]>({
     queryKey: [GET_PRODUCTS_BY_CATEGORY_QUERY_KEY, category ?? "all", options],

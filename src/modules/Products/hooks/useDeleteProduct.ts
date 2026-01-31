@@ -10,7 +10,7 @@ export const useDeleteProductById = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: number | string) => deleteById(id),
+    mutationFn: (id: number | string) => deleteById(Number(id)),
 
     onMutate: async (id) => {
       const numericId = Number(id);

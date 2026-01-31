@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
-import { AppShell, Burger, Container, Group, Stack, Text, Title } from "@mantine/core";
+import {
+  AppShell,
+  Burger,
+  Container,
+  Group,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
 
 import { ProductsSidebar } from "./components/ProductsSidebar";
 import { ProductsSection } from "./components/ProductsSection";
@@ -28,12 +36,13 @@ export const Products = () => {
   const { categories, isLoading: categoriesLoading } = useGetCategories();
 
   const { products, isLoading: productsLoading } = useGetProductsByCategory({
-    category: selectedCategory, 
+    category: selectedCategory,
     options,
   });
 
   const selectedCategoryName = selectedCategory
-    ? categories.find((c) => c.slug === selectedCategory)?.name ?? selectedCategory
+    ? (categories.find((c) => c.slug === selectedCategory)?.name ??
+      selectedCategory)
     : "All Products";
 
   console.log("categories:", categories);
@@ -73,8 +82,8 @@ export const Products = () => {
               <Stack gap={4}>
                 <Title order={2}>Our Products</Title>
                 <Text c="dimmed">
-                  Browse all items and explore categories. Sale label appears on the card if
-                  discount is higher than 10%.
+                  Browse all items and explore categories. Sale label appears on
+                  the card if discount is higher than 10%.
                 </Text>
               </Stack>
               <Burger hiddenFrom="sm" opened={opened} onClick={toggle} />
